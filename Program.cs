@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChannelsDemo
 {
     class Program
     {
+        static void PrintDivider()
+        {
+            Console.WriteLine("===================================================");
+        }
+        
         static async Task Main(string[] args)
         {
             var demoList = new List<IChannelStreaming>
             {
+                new BoundedChannel(),
                 new UningIAsyncEnumerable(),    // same as below but using IAsyncEnumerable
                 new CompletingAChannel(),       // channel completes
                 new UnfinishedChannel()         // channel left open for messages
@@ -16,6 +23,7 @@ namespace ChannelsDemo
 
             foreach(var demo in demoList)
             {
+                PrintDivider();
                 await demo.DoStreaming();
             } 
 
