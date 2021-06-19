@@ -8,23 +8,23 @@ namespace ChannelsDemo
     {
         public async Task DoStreaming()
         {
-            var myChannel = Channel.CreateUnbounded<int>();
+            var channel = Channel.CreateUnbounded<int>();
 
             _ = Task.Factory.StartNew(async () => {
                 // a very fast producer
                 for(int i = 0;i < 10;i++)
                 {
-                    await myChannel.Writer.WriteAsync(i);
+                    await channel.Writer.WriteAsync(i);
                 }
                 // complete the channel to indicate end of sending messages
-                myChannel.Writer.Complete();
+                channel.Writer.Complete();
             });
 
             try {
                 // a slow consumer
                 while(true)
                 {
-                    var i = await myChannel.Reader.ReadAsync();
+                    var i = await channel.Reader.ReadAsync();
                     Console.WriteLine($"Received : {i}");
                     await Task.Delay(2000);
                 }

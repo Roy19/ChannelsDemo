@@ -8,13 +8,13 @@ namespace ChannelsDemo
     {
         public async Task DoStreaming()
         {
-            var myChannel = Channel.CreateUnbounded<int>();
+            var channel = Channel.CreateUnbounded<int>();
 
             // some thread produces
             _ = Task.Factory.StartNew(async () => {
                 for(int i = 0;i < 10;i++)
                 {
-                    await myChannel.Writer.WriteAsync(i);
+                    await channel.Writer.WriteAsync(i);
                     await Task.Delay(1000);
                 }
                 // see what happens when the channel completes with an exception
@@ -22,9 +22,9 @@ namespace ChannelsDemo
             });
 
             // main thread simultaneously consumes
-            while(await myChannel.Reader.WaitToReadAsync())
+            while(await channel.Reader.WaitToReadAsync())
             {
-                var i = myChannel.Reader.ReadAsync();
+                var i = channel.Reader.ReadAsync();
                 Console.WriteLine($"Received data : {i}");
             }
         }
